@@ -212,6 +212,9 @@ router-id 2.2.2.2
 network 2.2.2.2 0.0.0.0 area 0
 network 10.1.1.4 0.0.0.3 area 0
 network 10.1.1.0 0.0.0.3 area 12
+interface e1/2
+ ip ospf network point-to-point
+!eto mismo lab mo
 
 R1:
 config t
@@ -221,6 +224,8 @@ router ospf 1
 router-id 1.1.1.1
 network 1.1.1.1 0.0.0.0 area 12
 network 10.1.1.0 0.0.0.3 area 12
+interface e1/0
+ ip ospf network point-to-point
 
 OSPF checking:
 sh ip protocols
@@ -329,7 +334,7 @@ router bgp 45
  network 45.4.5.0 mask 255.255.255.0
 end
 
-TASK4: WHY OSPF AND BGP ARE BEST FRIENDS:
+TASK4: WHY OSPF AND BGP ARE BEST FRIENDS, SOULMATE, LOVERS, FUCKBUDDY, MU, FOREVER, LIFETIME, COMMITTED:
 OSPF can Inject all BGP routes int ONE ospf route: O*E2
 R1:
 CONFIG t
