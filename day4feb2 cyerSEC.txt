@@ -304,6 +304,35 @@ Interface Gi 3
  ip access-group LASTFWP in
  do sh ip access-list LASTFWP
 
+EX.5 CREATE A FIREWALL POLICY NAMED LASTFWP2 TO OPEN
+WWW.WEB8.COM HAS http, https as Open
+WWW.WEB9.COM HAS ssh, telnet, dns as Open:
+if you canNOT make the Policy, you work in Jollibee.
+config t
+no ip access-list extended LASTFWP2
+ip access-list extended LASTFWP2
+Permit tcp any host www.web8.com eq 443 log
+Permit tcp any host www.web8.com eq 80 log
+Permit tcp any host www.web9.com eq 22 log
+Permit tcp any host www.web9.com eq 23 log
+Permit tcp any host www.web9.com eq 53 log
+Interface Gi 3
+ ip access-group LASTFWP2 in
+ do sh ip access-list LASTFWP2
+
+EX.6 CREATE A FIREWALL POLICY NAMED LASTFWP3 TO OPEN
+WWW.WEB8.COM HAS https as Open
+WWW.WEB9.COM HAS ssh as Open:
+if you canNOT make the Policy, you work in Jollibee.
+config t
+no ip access-list extended LASTFWP3
+ip access-list extended LASTFWP3
+Permit tcp any host www.web8.com eq 443 log
+Permit tcp any host www.web9.com eq 22 log
+Interface Gi 3
+ ip access-group LASTFWP3 in
+ do sh ip access-list LASTFWP3
+
 TASK8: CONFIGURING CISCO NETWORK SERVICES:
 NETWORK TIME PROTOCOL OR NTP 
 is a layer 7 protocol using UDP 123
@@ -312,6 +341,18 @@ config t
 ntp server 216.239.35.8
 end
 show ntp associations
+
+GIVE IP ADDRESS TO LINUX BLDGONE AND BLDGTWO:
+!BLDGONE
+sudo su
+ifconfig eth0 192.168.103.11 netmask 255.255.255.0 up
+route add default gw 192.168.103.8
+ping 8.8.8.8 1.1.1.1 4.2.2.2 8.8.4.4
+
+!BLDGTWO
+sudo su
+ifconfig eth0 192.168.103.11 netmask 255.255.255.0 up
+route add default gw 192.168.103.8
 
 TASK9: NAT: NETWORK ADDRESS TRANSLATION SERVICE:
 nat, proxy, hotspot, tethering, = PENGE INTERNET
@@ -331,8 +372,8 @@ no access-list 7
 access-list 7 permit 192.168.102.0 0.0.0.255
 access-list 7 permit 192.168.103.0 0.0.0.255
 ip nat inside source list 7 interface Gi 1 overload
-ip nat inside source static 192.168.102.69 192.168.108.69
-ip nat inside source static 192.168.103.88 192.168.108.88
+ip nat inside source static 192.168.103.11 192.168.108.69
+ip nat inside source static 192.168.103.12 192.168.108.88
 end
 
 TASK10: DO YOU HAVE TO REPLACED BY A.I AT WORK? REPLACED BY
