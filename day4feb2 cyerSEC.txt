@@ -231,7 +231,20 @@ CYBERSECURITY TASK7: PROTECTING YOUR CORPORATE WEB APPS.
 EX.1 CREATE A FIREWALL POLICY NAMED PROWEBAPP1 TO OPEN
 WWW.WEB8.COM HAS HTTP AND HTTPS AS OPEN
 WWW.WEB9.COM HAS SSH AND DNS OPEN
-formula:       PROTOCOL    HACKER    VICTIM     PORT:
+formula:       PROTOCOL        HACKER    VICTIM         PORT:
+          tcp, udp, icmp, ip    any     web8, web9  
+Ports:
+PORT    STATE SERVICE
+7/tcp   open  echo
+9/tcp   open  discard
+13/tcp  open  daytime
+19/tcp  open  chargen
+22/tcp  open  ssh
+23/tcp  open  telnet
+53/tcp  open  domain
+79/tcp  open  finger
+80/tcp  open  http
+443/tcp open  https
 config t
 no ip access-list extended PROWEBAPP1
 ip access-list extended PROWEBAPP1
@@ -256,27 +269,40 @@ Interface Gi 3
  ip access-group PROWEBAPP2 in
  do sh ip access-list PROWEBAPP1
 
-EX.4 CREATE A FIREWALL POLICY NAMED PROWEBAPP4 TO OPEN
-WWW.WEB8.COM HAS ping, dns, https OPEN
-WWW.WEB9.COM HAS everything OPEN!
+EX.4 CREATE A FIREWALL POLICY NAMED ProtectWEB1 TO OPEN
+WWW.WEB8.COM HAS dns, https OPEN
+WWW.WEB9.COM HAS dns, http, ping/icmp OPEN
 config t
-no ip access-list extended PROWEBAPP4
-ip access-list extended PROWEBAPP4
-Permit icmp any host www.web8.com
-Permit tcp any host www.web8.com eq 53
-Permit tcp any host www.web8.com eq 443
-Permit IP any host www.web9.com
+no ip access-list extended ProtectWEB1
+ip access-list extended ProtectWEB1
+Permit tcp any host www.web8.com eq 53 log
+Permit tcp any host www.web8.com eq 443 log
+Permit tcp any host www.web9.com eq 22 log
+Permit tcp any host www.web9.com eq 80 log
+Permit icmp any host www.web9.com log
 Interface Gi 3
- ip access-group PROWEBAPP4 in
- do sh ip access-list PROWEBAPP4
+ ip access-group ProtectWEB1 in
+ do sh ip access-list ProtectWEB1
 
 EX.5 CREATE A FIREWALL POLICY NAMED LASTFWP TO OPEN
 WWW.WEB8.COM HAS ping, chargen, finger, http as Open
 WWW.WEB9.COM HAS ssh, telnet, daytime, dns, https as Open:
 if you canNOT make the Policy, you work in Jollibee.
 config t
+no ip access-list extended LASTFWP
+ip access-list extended LASTFWP
+Permit tcp any host www.web8.com eq 19 log
+Permit tcp any host www.web8.com eq 79 log
+Permit tcp any host www.web8.com eq 80 log
+Permit tcp any host www.web9.com eq 13 log
+Permit tcp any host www.web9.com eq 22 log
+Permit tcp any host www.web9.com eq 23 log
+Permit tcp any host www.web9.com eq 53 log
+Permit tcp any host www.web9.com eq 443 log
+Permit icmp any host www.web8.com log
 Interface Gi 3
- NO ip access-group LASTFWP in
+ ip access-group LASTFWP in
+ do sh ip access-list LASTFWP
 
 TASK8: CONFIGURING CISCO NETWORK SERVICES:
 NETWORK TIME PROTOCOL OR NTP 
